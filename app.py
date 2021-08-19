@@ -8,7 +8,7 @@ class Application():
         self.master = master
         self.master.protocol("WM_DELETE_WINDOW", self.finishe_app)
 
-        self._DEFAULT_SIZE = 40
+        self._DEFAULT_SIZE = 35
         self._ZOOM_SIZE = 60
         self._SHAPE = 'square'
         self._BORDER_COLOR = '#ffffff' 
@@ -31,8 +31,8 @@ class Application():
                 frame = self.mirrored_frame(frame)
                 frame = self.convert_frame_to_correct_color(frame)
                 frame = self.convert_frame_array_to_image(frame)
-                frame = self.resize_frame(frame,40)
-                frmae = self.transform_shape(frame,self._SHAPE)
+                frame = self.resize_frame(frame,self._DEFAULT_SIZE)
+                frame = self.transform_shape(frame,self._SHAPE)
                 frame = self.convert_image_to_tk_image(frame)
 
                 self.label_content.configure(image=frame)
@@ -67,10 +67,11 @@ class Application():
         return mirrored_frame
     
     def transform_shape(self,frame,shape):
-        if shape == 'square':
+        
+        if shape =='square':
+            distance_of_border = 15
             x,y = frame.size
-            frame_square = frame.crop((int(x*self._DEFAULT_SIZE/100),0,int(x-(x*self._DEFAULT_SIZE/100)),y))
-
+            frame_square = frame.crop((int(x*distance_of_border/100),0,int(x-(x*distance_of_border/100)),y))
             return frame_square
         else:
             return frame
