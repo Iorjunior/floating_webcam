@@ -3,7 +3,6 @@ from PIL import Image , ImageTk
 import threading
 import cv2
 
-
 class Application():
     def __init__(self,master):
         self.master = master  
@@ -21,8 +20,24 @@ class Application():
             status, frame = self.webcam_device.read()
 
             if status:
-                pass           
+                frame = self.convert_frame_to_correct_color(frame)
+                frame = self.convert_frame_array_to_image(frame)
+                frame = self.resize_frame(frame,40)
+                frame = self.convert_image_to_tk_image(frame)
+
+                self.label_content.configure(image=frame)
+                self.label_content.image = frame         
     
+    def resize_frame(self,frame,porcent):
+        
+        x = int(frame.size[0] * porcent / 100)
+        y = int(frame.size[1] * porcent / 100)
+        new_size = (x,y)
+
+        resized_frame = frame.resize(new_size, Image.BILINEAR)
+        
+        return resized_frame
+
     def convert_frame_to_correct_color(self,frame):
         colored_frame = cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
         return colored_frame
@@ -39,6 +54,7 @@ class Application():
         mirrored_frame = cv2.flip(frame)
         return mirrored_frame
 
+    
 
 if __name__ == "__main__":
     root = Tk()
