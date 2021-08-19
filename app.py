@@ -6,7 +6,9 @@ import cv2
 class Application():
     def __init__(self,master):
         self.master = master
-        self.master.protocol("WM_DELETE_WINDOW", self.finishe_app)
+        self.master.protocol("WM_DELETE_WINDOW", self.finished_app)
+        self.master.attributes('-topmost',1)
+        self.master.overrideredirect(1)
 
         self._DEFAULT_SIZE = 35
         self._ZOOM_SIZE = 60
@@ -16,6 +18,9 @@ class Application():
         self.is_finished = False
         
         self.label_content = Label(self.master)
+        self.label_content.bind("<ButtonPress-1>",self.start_move)
+        self.label_content.bind("<ButtonRelease-1>",self.stop_move)
+        self.label_content.bind("<B1-Motion>",self.do_move)
         self.label_content.pack()
 
         self.webcam_device = cv2.VideoCapture(0,cv2.CAP_DSHOW)
@@ -76,22 +81,28 @@ class Application():
         else:
             return frame
 
-        
-         
+    def start_move(self, event):
+        self.x = event.x
+        self.y = event.y
 
-    def finishe_app(self):
+    def stop_move(self, event):
+        self.x = None
+        self.y = None
+
+    def do_move(self, event):
+        deltax = event.x - self.x
+        deltay = event.y - self.y
+        x = self.master.winfo_x() + deltax
+        y = self.master.winfo_y() + deltay
+
+        self.master.geometry("+{}+{}".format(x, y))
+        
+    def finished_app(self):
         self.is_finished = True
     
 
 if __name__ == "__main__":
-    try:
-        with open('config.txt') as f:
-            print(f)
-    except:
-        pass
-
-    
-    
+   
     root = Tk()
     app = Application(root)
     root.mainloop()
