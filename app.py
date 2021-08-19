@@ -1,5 +1,5 @@
 from tkinter import *
-from PIL import Image , ImageTk
+from PIL import Image , ImageTk, ImageOps
 import threading
 import cv2
 
@@ -17,7 +17,8 @@ class Application():
         self._ZOOM_SIZE = 60
         self._SHAPE = 'square'
         self._BORDER_COLOR = '#ffffff' 
-
+        self._BORDER_SIZE = 4
+ 
         self.is_finished = False
         
         self.label_content = Label(self.master,bg='#2b2921')
@@ -41,6 +42,7 @@ class Application():
                 frame = self.convert_frame_array_to_image(frame)
                 frame = self.resize_frame(frame,self._DEFAULT_SIZE)
                 frame = self.transform_shape(frame,self._SHAPE)
+                frame = self.set_border(frame)
                 frame = self.convert_image_to_tk_image(frame)
 
                 self.label_content.configure(image=frame)
@@ -83,6 +85,11 @@ class Application():
             return frame_square
         else:
             return frame
+
+    def set_border(self,frame):
+
+        border_frame =  ImageOps.expand(frame,border=self._BORDER_SIZE,fill=self._BORDER_COLOR)  
+        return border_frame
 
     def start_move(self, event):
         self.x = event.x
