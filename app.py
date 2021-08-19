@@ -17,14 +17,17 @@ class Application():
         self._ZOOM_SIZE = 60
         self._SHAPE = 'square'
         self._BORDER_COLOR = '#ffffff' 
-        self._BORDER_SIZE = 4
+        self._BORDER_SIZE = 6
  
+        self.frame_size = self._DEFAULT_SIZE
         self.is_finished = False
+        self.in_zoom = False
         
         self.label_content = Label(self.master,bg='#2b2921')
         self.label_content.bind("<ButtonPress-1>",self.start_move)
         self.label_content.bind("<ButtonRelease-1>",self.stop_move)
         self.label_content.bind("<B1-Motion>",self.do_move)
+        self.label_content.bind('<Double-Button-1>',self.zoom_frame)
         self.label_content.pack()
 
         self.webcam_device = cv2.VideoCapture(0,cv2.CAP_DSHOW)
@@ -40,7 +43,7 @@ class Application():
                 frame = self.mirrored_frame(frame)
                 frame = self.convert_frame_to_correct_color(frame)
                 frame = self.convert_frame_array_to_image(frame)
-                frame = self.resize_frame(frame,self._DEFAULT_SIZE)
+                frame = self.resize_frame(frame,self.frame_size)
                 frame = self.transform_shape(frame,self._SHAPE)
                 frame = self.set_border(frame)
                 frame = self.convert_image_to_tk_image(frame)
@@ -90,6 +93,14 @@ class Application():
 
         border_frame =  ImageOps.expand(frame,border=self._BORDER_SIZE,fill=self._BORDER_COLOR)  
         return border_frame
+
+    def zoom_frame(self,event=None):
+        if self.in_zoom == False:
+            self.frame_size = self._ZOOM_SIZE
+            self.in_zoom = True
+        else:
+            self.frame_size = self._DEFAULT_SIZE
+            self.in_zoom = False
 
     def start_move(self, event):
         self.x = event.x
