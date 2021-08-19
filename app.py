@@ -7,8 +7,11 @@ class Application():
     def __init__(self,master):
         self.master = master
         self.master.protocol("WM_DELETE_WINDOW", self.finished_app)
-        self.master.attributes('-topmost',1)
         self.master.overrideredirect(1)
+        self.master.attributes('-topmost',1)
+        self.master.attributes("-transparentcolor", "#2b2921")
+        self.master.bind("<Control-S>",self.finished_app)
+
 
         self._DEFAULT_SIZE = 35
         self._ZOOM_SIZE = 60
@@ -17,7 +20,7 @@ class Application():
 
         self.is_finished = False
         
-        self.label_content = Label(self.master)
+        self.label_content = Label(self.master,bg='#2b2921')
         self.label_content.bind("<ButtonPress-1>",self.start_move)
         self.label_content.bind("<ButtonRelease-1>",self.stop_move)
         self.label_content.bind("<B1-Motion>",self.do_move)
@@ -97,7 +100,7 @@ class Application():
 
         self.master.geometry("+{}+{}".format(x, y))
         
-    def finished_app(self):
+    def finished_app(self,event=None):
         self.is_finished = True
     
 
