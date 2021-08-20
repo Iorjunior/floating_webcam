@@ -35,13 +35,18 @@ After running for the first time, you can access the app settings in `config.jso
   </thead>
   <tbody>    
     <tr>
-      <td>:keyboard: Ctrl+Shift+X</td>
-      <td>Close Application</td>
-    </tr>
-    <tr>
       <td>:computer_mouse: Left Double Click</td>
       <td>2x Zoom</td>
     </tr>
+    <tr>
+      <td>:keyboard: Ctrl+ +/-</td>
+      <td>Zoom in/out</td>
+    </tr>
+    <tr>
+      <td>:keyboard: Ctrl+Shift+X</td>
+      <td>Close Application</td>
+    </tr>
+    
   </tbody>
 </table>
 

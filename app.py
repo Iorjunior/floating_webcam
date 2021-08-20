@@ -5,13 +5,16 @@ import cv2
 import json
 
 class Application():
-    def __init__(self, master, default_size, zoom_size, shape, border_color, border_size):
+    def __init__(self, master, default_size, zoom_size, shape, border_color, border_size,mirrored):
         self.master = master
         self.master.protocol("WM_DELETE_WINDOW", self.finished_app)
         self.master.overrideredirect(1)
         self.master.attributes('-topmost',1)
         self.master.attributes("-transparentcolor", "#2b2921")
         self.master.bind("<Control-X>",self.finished_app)
+        self.master.bind("<Control-=>",self.zoom_in)
+        self.master.bind("<Control-minus>",self.zoom_out)
+        self.master.bind("<Control-slash>",self.mirrored_frame)
 
 
         self._DEFAULT_SIZE = default_size
@@ -19,16 +22,18 @@ class Application():
         self._SHAPE = shape
         self._BORDER_COLOR = border_color 
         self._BORDER_SIZE = border_size
+        self._MIRRORED = mirrored
  
         self.frame_size = self._DEFAULT_SIZE
         self.is_finished = False
+        self.is_mirrored = self._MIRRORED
         self.in_zoom = False
         
         self.label_content = Label(self.master,bg='#2b2921')
         self.label_content.bind("<ButtonPress-1>",self.start_move)
         self.label_content.bind("<ButtonRelease-1>",self.stop_move)
         self.label_content.bind("<B1-Motion>",self.do_move)
-        self.label_content.bind('<Double-Button-1>',self.zoom_frame)
+        self.label_content.bind("<Double-Button-1>",self.zoom_frame)
         self.label_content.pack()
 
         self.webcam_device = cv2.VideoCapture(0,cv2.CAP_DSHOW)
@@ -41,7 +46,7 @@ class Application():
             status, frame = self.webcam_device.read()
 
             if status:
-                frame = self.mirrored_frame(frame)
+                frame = self.mirror_frame(frame)
                 frame = self.convert_frame_to_correct_color(frame)
                 frame = self.convert_frame_array_to_image(frame)
                 frame = self.resize_frame(frame,self.frame_size)
@@ -76,10 +81,20 @@ class Application():
         tk_image = ImageTk.PhotoImage(frame)
         return tk_image
 
-    def mirrored_frame(self,frame):
-        mirrored_frame = cv2.flip(frame,1)
-        return mirrored_frame
+    def mirror_frame(self,frame):
+        if self.is_mirrored:
+            mirrored_frame = cv2.flip(frame,1)
+            return mirrored_frame
+        else:
+            return frame
     
+    def mirrored_frame(self,event=None):
+        if self.is_mirrored:
+            self.is_mirrored = False
+        else:
+            self.is_mirrored = True
+
+
     def transform_shape(self,frame,shape):
         
         if shape =='square':
@@ -103,6 +118,12 @@ class Application():
             self.frame_size = self._DEFAULT_SIZE
             self.in_zoom = False
 
+    def zoom_in(self,event=None):
+        self.frame_size += 5
+    
+    def zoom_out(self,event=None):
+        self.frame_size -= 5
+
     def start_move(self, event):
         self.x = event.x
         self.y = event.y
@@ -119,10 +140,13 @@ class Application():
             y = self.master.winfo_y() + deltay
 
             self.master.geometry("+{}+{}".format(x, y))
-        
+
     def finished_app(self,event=None):
         self.is_finished = True
-    
+
+
+    def key_teste(self,event):
+        print(event)
 
 if __name__ == "__main__":
     
@@ -131,7 +155,8 @@ if __name__ == "__main__":
     'zoom_size':70,
     'shape':'square',
     'border_color':'#7a0bbf',
-    'border_size':6
+    'border_size':6,
+    'mirrored' : True
     }
     json_config = None
     
@@ -151,6 +176,7 @@ if __name__ == "__main__":
     zoom_size=json_config['zoom_size'],
     shape=json_config['shape'],
     border_color=json_config['border_color'],
-    border_size=json_config['border_size']
+    border_size=json_config['border_size'],
+    mirrored=json_config['mirrored']
     )
     root.mainloop()
