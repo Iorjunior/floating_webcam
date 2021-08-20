@@ -38,6 +38,10 @@ After running for the first time, you can access the app settings in `config.jso
       <td>Ctrl+Shift+X</td>
       <td>Close Application</td>
     </tr>
+    <tr>
+      <td>Left Double Click</td>
+      <td>2x Zoom</td>
+    </tr>
   </tbody>
 </table>
 

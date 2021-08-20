@@ -11,7 +11,7 @@ class Application():
         self.master.overrideredirect(1)
         self.master.attributes('-topmost',1)
         self.master.attributes("-transparentcolor", "#2b2921")
-        self.master.bind("<Control-S>",self.finished_app)
+        self.master.bind("<Control-X>",self.finished_app)
 
 
         self._DEFAULT_SIZE = default_size
@@ -128,7 +128,7 @@ if __name__ == "__main__":
     
     default_config = {
     'default_size':35,
-    'zoom_size':55,
+    'zoom_size':70,
     'shape':'square',
     'border_color':'#7a0bbf',
     'border_size':6
