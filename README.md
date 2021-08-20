@@ -11,7 +11,7 @@
 Clone de repository, open its folder and install dependencies with:
 
 ```sh
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 Run it using:
