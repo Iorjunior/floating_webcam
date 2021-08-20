@@ -39,8 +39,12 @@ After running for the first time, you can access the app settings in `config.jso
       <td>2x Zoom</td>
     </tr>
     <tr>
-      <td>:keyboard: Ctrl+ +/-</td>
+      <td>:keyboard: +/-</td>
       <td>Zoom in/out</td>
+    </tr>
+    <tr>
+      <td>:keyboard: /</td>
+      <td>Mirror Image</td>
     </tr>
     <tr>
       <td>:keyboard: Ctrl+Shift+X</td>
