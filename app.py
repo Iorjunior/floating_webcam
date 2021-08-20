@@ -11,7 +11,7 @@ class Application():
         self.master.overrideredirect(1)
         self.master.attributes('-topmost',1)
         self.master.attributes("-transparentcolor", "#2b2921")
-        self.master.bind("<Control-S>",self.finished_app)
+        self.master.bind("<Control-X>",self.finished_app)
 
 
         self._DEFAULT_SIZE = default_size
