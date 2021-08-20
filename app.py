@@ -12,9 +12,9 @@ class Application():
         self.master.attributes('-topmost',1)
         self.master.attributes("-transparentcolor", "#2b2921")
         self.master.bind("<Control-X>",self.finished_app)
-        self.master.bind("<Control-=>",self.zoom_in)
-        self.master.bind("<Control-minus>",self.zoom_out)
-        self.master.bind("<Control-slash>",self.mirrored_frame)
+        self.master.bind("<=>",self.zoom_in)
+        self.master.bind("<minus>",self.zoom_out)
+        self.master.bind("<slash>",self.mirrored_frame)
 
 
         self._DEFAULT_SIZE = default_size
