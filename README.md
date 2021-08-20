@@ -22,7 +22,7 @@ python app.py
 
 ## Usage & settings
 
-After running for the first time you can access the app settings through the tray menu and click on "Settings" to change default shortcuts, camera size, zoom, etc.
+After running for the first time, you can access the app settings in `config.json` and change the  camera size, zoom, border color, etc.
 
 ### Default shortcuts
 
