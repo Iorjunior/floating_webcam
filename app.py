@@ -2,9 +2,10 @@ from tkinter import *
 from PIL import Image , ImageTk, ImageOps
 import threading
 import cv2
+import json
 
 class Application():
-    def __init__(self,master):
+    def __init__(self, master, default_size, zoom_size, shape, border_color, border_size):
         self.master = master
         self.master.protocol("WM_DELETE_WINDOW", self.finished_app)
         self.master.overrideredirect(1)
@@ -13,11 +14,11 @@ class Application():
         self.master.bind("<Control-S>",self.finished_app)
 
 
-        self._DEFAULT_SIZE = 35
-        self._ZOOM_SIZE = 60
-        self._SHAPE = 'square'
-        self._BORDER_COLOR = '#ffffff' 
-        self._BORDER_SIZE = 6
+        self._DEFAULT_SIZE = default_size
+        self._ZOOM_SIZE = zoom_size
+        self._SHAPE = shape
+        self._BORDER_COLOR = border_color 
+        self._BORDER_SIZE = border_size
  
         self.frame_size = self._DEFAULT_SIZE
         self.is_finished = False
@@ -111,19 +112,45 @@ class Application():
         self.y = None
 
     def do_move(self, event):
-        deltax = event.x - self.x
-        deltay = event.y - self.y
-        x = self.master.winfo_x() + deltax
-        y = self.master.winfo_y() + deltay
+        if self.x or self.y:
+            deltax = event.x - self.x
+            deltay = event.y - self.y
+            x = self.master.winfo_x() + deltax
+            y = self.master.winfo_y() + deltay
 
-        self.master.geometry("+{}+{}".format(x, y))
+            self.master.geometry("+{}+{}".format(x, y))
         
     def finished_app(self,event=None):
         self.is_finished = True
     
 
 if __name__ == "__main__":
-   
+    
+    default_config = {
+    'default_size':35,
+    'zoom_size':55,
+    'shape':'square',
+    'border_color':'#7a0bbf',
+    'border_size':6
+    }
+    json_config = None
+    
+    try:
+        with open('config.json','r', encoding='utf8') as file:
+            json_config = json.load(file)
+    except:
+        with open('config.json','w', encoding='utf8') as file:
+            json.dump(default_config,file,indent=2)
+            json_config = default_config
+            
+
     root = Tk()
-    app = Application(root)
+    app = Application(
+    master=root,
+    default_size=json_config['default_size'],
+    zoom_size=json_config['zoom_size'],
+    shape=json_config['shape'],
+    border_color=json_config['border_color'],
+    border_size=json_config['border_size']
+    )
     root.mainloop()
