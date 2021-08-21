@@ -3,6 +3,8 @@ from os import readlink
 
 
 default_config = {
+    'start_pos_x' : 10,
+    'start_pos_y' : 10,
     'default_size':35,
     'zoom_size':70,
     'shape':'square',

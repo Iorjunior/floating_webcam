@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk, Label
 from PIL import Image , ImageTk, ImageOps
 import threading
 import cv2
@@ -7,7 +7,18 @@ import tools
 
 class Application():
     def __init__(self, master,*args):
+       
+        self._START_POS_X = args[0]['start_pos_x']
+        self._START_POS_Y = args[0]['start_pos_y'] 
+        self._DEFAULT_SIZE = args[0]['default_size']
+        self._ZOOM_SIZE = args[0]['zoom_size']
+        self._SHAPE = args[0]['shape']
+        self._BORDER_COLOR = args[0]['border_color'] 
+        self._BORDER_SIZE = args[0]['border_size']
+        self._MIRRORED = args[0]['mirrored']
+
         self.master = master
+        self.master.geometry("+{}+{}".format(self._START_POS_X, self._START_POS_Y))
         self.master.protocol("WM_DELETE_WINDOW", self.finished_app)
         self.master.overrideredirect(1)
         self.master.attributes('-topmost',1)
@@ -16,13 +27,8 @@ class Application():
         self.master.bind("<=>",self.zoom_in)
         self.master.bind("<minus>",self.zoom_out)
         self.master.bind("<slash>",self.mirrored_frame)
-                
-        self._DEFAULT_SIZE = args[0]['default_size']
-        self._ZOOM_SIZE = args[0]['zoom_size']
-        self._SHAPE = args[0]['shape']
-        self._BORDER_COLOR = args[0]['border_color'] 
-        self._BORDER_SIZE = args[0]['border_size']
-        self._MIRRORED = args[0]['mirrored']
+                 
+        
             
         self.frame_size = self._DEFAULT_SIZE
         self.is_finished = False
@@ -148,6 +154,8 @@ class Application():
     
     def save_preferences(self):
         preferences = {
+        'start_pos_x' : self.master.winfo_x(),
+        'start_pos_y' : self.master.winfo_y(),
         'default_size': self.frame_size,
         'zoom_size': self._ZOOM_SIZE,
         'shape': self._SHAPE,
@@ -156,7 +164,6 @@ class Application():
         'mirrored' : self.is_mirrored
         }
         return tools.write_config_json(preferences)
-
 
     def key_teste(self,event):
         print(event)
