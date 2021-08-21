@@ -3,9 +3,10 @@ from PIL import Image , ImageTk, ImageOps
 import threading
 import cv2
 import json
+import tools
 
 class Application():
-    def __init__(self, master, default_size, zoom_size, shape, border_color, border_size,mirrored):
+    def __init__(self, master,*args):
         self.master = master
         self.master.protocol("WM_DELETE_WINDOW", self.finished_app)
         self.master.overrideredirect(1)
@@ -15,20 +16,19 @@ class Application():
         self.master.bind("<=>",self.zoom_in)
         self.master.bind("<minus>",self.zoom_out)
         self.master.bind("<slash>",self.mirrored_frame)
-
-
-        self._DEFAULT_SIZE = default_size
-        self._ZOOM_SIZE = zoom_size
-        self._SHAPE = shape
-        self._BORDER_COLOR = border_color 
-        self._BORDER_SIZE = border_size
-        self._MIRRORED = mirrored
- 
+                
+        self._DEFAULT_SIZE = args[0]['default_size']
+        self._ZOOM_SIZE = args[0]['zoom_size']
+        self._SHAPE = args[0]['shape']
+        self._BORDER_COLOR = args[0]['border_color'] 
+        self._BORDER_SIZE = args[0]['border_size']
+        self._MIRRORED = args[0]['mirrored']
+            
         self.frame_size = self._DEFAULT_SIZE
         self.is_finished = False
         self.is_mirrored = self._MIRRORED
         self.in_zoom = False
-        
+           
         self.label_content = Label(self.master,bg='#2b2921')
         self.label_content.bind("<ButtonPress-1>",self.start_move)
         self.label_content.bind("<ButtonRelease-1>",self.stop_move)
@@ -94,7 +94,6 @@ class Application():
         else:
             self.is_mirrored = True
 
-
     def transform_shape(self,frame,shape):
         
         if shape =='square':
@@ -142,41 +141,31 @@ class Application():
             self.master.geometry("+{}+{}".format(x, y))
 
     def finished_app(self,event=None):
-        self.is_finished = True
+        if self.save_preferences():
+            self.is_finished = True
+        else:
+            self.save_preferences()
+    
+    def save_preferences(self):
+        preferences = {
+        'default_size': self.frame_size,
+        'zoom_size': self._ZOOM_SIZE,
+        'shape': self._SHAPE,
+        'border_color': self._BORDER_COLOR,
+        'border_size': self._BORDER_SIZE,
+        'mirrored' : self.is_mirrored
+        }
+        return tools.write_config_json(preferences)
 
 
     def key_teste(self,event):
         print(event)
 
-if __name__ == "__main__":
-    
-    default_config = {
-    'default_size':35,
-    'zoom_size':70,
-    'shape':'square',
-    'border_color':'#7a0bbf',
-    'border_size':6,
-    'mirrored' : True
-    }
-    json_config = None
-    
-    try:
-        with open('config.json','r', encoding='utf8') as file:
-            json_config = json.load(file)
-    except:
-        with open('config.json','w', encoding='utf8') as file:
-            json.dump(default_config,file,indent=2)
-            json_config = default_config
-            
 
+if __name__ == "__main__":
+
+    json_config = tools.reed_config_json()
     root = Tk()
-    app = Application(
-    master=root,
-    default_size=json_config['default_size'],
-    zoom_size=json_config['zoom_size'],
-    shape=json_config['shape'],
-    border_color=json_config['border_color'],
-    border_size=json_config['border_size'],
-    mirrored=json_config['mirrored']
-    )
+    app = Application(root,json_config)
     root.mainloop()
+    
