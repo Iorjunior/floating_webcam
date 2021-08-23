@@ -1,7 +1,6 @@
 import json
 from os import readlink 
 
-
 default_config = {
     'start_pos_x' : 10,
     'start_pos_y' : 10,
@@ -38,5 +37,7 @@ def check_config_json(json_file):
         return True
     else:
         return False
+
+
 
 

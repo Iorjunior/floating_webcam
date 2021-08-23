@@ -27,9 +27,7 @@ class Application():
         self.master.bind("<=>",self.zoom_in)
         self.master.bind("<minus>",self.zoom_out)
         self.master.bind("<slash>",self.mirrored_frame)
-                 
-        
-            
+                             
         self.frame_size = self._DEFAULT_SIZE
         self.is_finished = False
         self.is_mirrored = self._MIRRORED
@@ -124,11 +122,13 @@ class Application():
             self.in_zoom = False
 
     def zoom_in(self,event=None):
-        self.frame_size += 5
-    
+        if self.frame_size < 95:
+            self.frame_size += 5
+          
     def zoom_out(self,event=None):
-        self.frame_size -= 5
-
+        if self.frame_size > 15:
+            self.frame_size -= 5
+        
     def start_move(self, event):
         self.x = event.x
         self.y = event.y

@@ -17,7 +17,7 @@ pip install -r requirements.txt
 Run it using:
 
 ```sh
-python app.py
+python ./floating_webcam/app.py
 ```
 
 ## Usage & settings
