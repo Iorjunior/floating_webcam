@@ -8,6 +8,12 @@
 
 ## Running locally
 
+First make sure you have Tkinter installed on your system.
+If it's a Debian based system, you just need to run:
+```sh
+$ sudo apt-get install python3-tk
+```
+
 Clone de repository, open its folder and install dependencies with:
 
 ```sh
